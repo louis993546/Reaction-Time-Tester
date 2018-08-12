@@ -127,11 +127,6 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        {/* <View>
-          <Text>1. When the button turns Green (#00FF00), press it as fast as possible</Text>
-          <Text>2. When the button turns Red (#FF0000), wait.</Text>
-          <Text>3. When the button turns Yellow (#FFFF00), tap again to start the next round</Text>
-        </View> */}
         <Button title="Instruction" onPress={this.onPressInstruction}/>
         <ScoreBoard scores={this.state.scoreBoard}/>
         <ReactionButton state={this.state.trafficLight} onPress={this.onPressReactionButton}/>
