@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
 import { AppRegistry, StyleSheet, Text, View} from 'react-native';
 import {Score} from './score.js'
+import _ from 'lodash'
 
 export class ScoreBoard extends Component {
     render() {
+        let average = _.meanBy(this.props.scores.scores, (s) => s.score)
         return (
             <View style={styles.container}>
                 <View style={styles.scoreList}>
@@ -13,7 +15,7 @@ export class ScoreBoard extends Component {
                     <Score name='4' milliseconds={this.props.scores.scores[3].score}/>
                     <Score name='5' milliseconds={this.props.scores.scores[4].score}/>
                 </View>
-                <Text>Average = TODO</Text>
+                <Text>Average = {average}</Text>
             </View>
         );
     }

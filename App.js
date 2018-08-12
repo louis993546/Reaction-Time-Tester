@@ -11,13 +11,6 @@ import {Platform, StyleSheet, Text, View, Button} from 'react-native';
 import {ScoreBoard} from './components/scoreBoard.js'
 import {ReactionButton} from './components/reactionButton.js'
 
-const instructions = Platform.select({
-  ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
-  android:
-    'Double tap R on your keyboard to reload,\n' +
-    'Shake or press menu button for dev menu',
-});
-
 type Props = {};
 export default class App extends Component<Props> {
 
@@ -26,11 +19,11 @@ export default class App extends Component<Props> {
     this.state = {
       scoreBoard: {
         scores: [
-          {name: '1',score: 100},
-          {name: '2',score: 200},
-          {name: '3',score: 300},
-          {name: '4',score: 400},
-          {name: '5',score: 500},
+          {score: 0},
+          {score: 0},
+          {score: 0},
+          {score: 0},
+          {score: 0},
         ]
       },
       trafficLight: {state: 'restart'},
