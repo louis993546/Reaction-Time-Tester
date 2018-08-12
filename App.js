@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, View, Button} from 'react-native';
+import {Platform, StyleSheet, Text, View, Button, Alert} from 'react-native';
 import {ScoreBoard} from './components/scoreBoard.js'
 import {ReactionButton} from './components/reactionButton.js'
 
@@ -31,9 +31,24 @@ export default class App extends Component<Props> {
     }
   }
 
+  onPressInstruction = () => {
+    Alert.alert(
+      'Instruction',
+      '1. When the button is red, wait.\n2. When the button is green, press as fast as possible.\n3. When the button is yellow, press again to start the next round',
+      [{text: 'Got it!', onPress: () => console.log('alert dismissed')}],
+      { cancelable: true }
+    )
+  }
+
   onPressWhenWaiting = () => {
-    // nothing, literally, for now
-    // TODO mark this round as invalid
+    // mark this round as invalid
+    this.setState(previousState => {
+      return {
+        scoreBoard: previousState.scoreBoard,
+        trafficLight: { state: 'invalid' },
+        timeWhenStart: 0
+      }
+    })
   }
 
   onPressWhenClickNow = () => {
@@ -54,26 +69,20 @@ export default class App extends Component<Props> {
   }
 
   onPressWhenRestart = () => {
-    console.log("clicked when restart")
-    
     fetch('https://www.random.org/integers/?num=1&min=1&max=6&col=1&base=10&format=plain&rnd=new')
-      .then((response) => {
-        var text = response.text()._55
-        console.log(text)
-        return text
-      })
+      .then((response) => response.text()._55)
       .then((seconds) => seconds * 1000)
       .then((ms) => {
         setTimeout(() => {
-          this.setState(previousState => {
-            return {
-              scoreBoard: previousState.scoreBoard,
-              trafficLight: {
-                state: 'clickNow'
-              },
-              timeWhenStart: (new Date).getTime()
-            };
-          });
+          if (this.state.trafficLight.state == 'waiting'){
+            this.setState(previousState => {
+              return {
+                scoreBoard: previousState.scoreBoard,
+                trafficLight: {state: 'clickNow'},
+                timeWhenStart: (new Date).getTime()
+              };
+            });
+          }
         }, ms);
       })
 
@@ -89,7 +98,12 @@ export default class App extends Component<Props> {
     });
   }
 
-  onPressClickMe = () => {
+  onPressWhenInvalid = () => {
+    //the behaviour is exactly the same as restart
+    this.onPressWhenRestart()
+  }
+
+  onPressReactionButton = () => {
     console.log('button is being click, and this is the current state: ' + JSON.stringify(this.state))
     var stateEnum = this.state.trafficLight.state
     switch(stateEnum) {
@@ -102,6 +116,9 @@ export default class App extends Component<Props> {
       case "restart":
         this.onPressWhenRestart()
         break;
+      case "invalid":
+        this.onPressWhenInvalid()
+        break;
       default:
         throw "'" + stateEnum + "' is not a valid state"
     }
@@ -110,11 +127,14 @@ export default class App extends Component<Props> {
   render() {
     return (
       <View style={styles.container}>
-        <View>
-          <Text>Instructions???</Text>
-        </View>
+        {/* <View>
+          <Text>1. When the button turns Green (#00FF00), press it as fast as possible</Text>
+          <Text>2. When the button turns Red (#FF0000), wait.</Text>
+          <Text>3. When the button turns Yellow (#FFFF00), tap again to start the next round</Text>
+        </View> */}
+        <Button title="Instruction" onPress={this.onPressInstruction}/>
         <ScoreBoard scores={this.state.scoreBoard}/>
-        <ReactionButton state={this.state.trafficLight} onPress={this.onPressClickMe}/>
+        <ReactionButton state={this.state.trafficLight} onPress={this.onPressReactionButton}/>
       </View>
     );
   }

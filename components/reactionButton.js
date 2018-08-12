@@ -17,14 +17,18 @@ export class ReactionButton extends Component {
                 break;
             case 'restart':
                 style = styles.trafficLightRestart
-                text = 'Try again'
+                text = 'Click me to try again'
+                break;
+            case 'invalid':
+                style = styles.trafficLightInvalid
+                text = 'Too early, click me to try again'
                 break;
             default:
                 throw "'" + state + "' is not a valid state"
         }
         return (
             <TouchableHighlight onPress={this.props.onPress}>
-                <View style={style}>
+                <View style={[styles.trafficLightBase, style]}>
                     <Text style={styles.trafficSign}>{text}</Text>
                 </View>
             </TouchableHighlight>
@@ -33,23 +37,22 @@ export class ReactionButton extends Component {
 }
 
 const styles = StyleSheet.create({
-    trafficLightWaiting: {
-        backgroundColor: '#FF0000',
-        minHeight: 400,
+    trafficLightBase: {
+        minHeight: 300,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    trafficLightWaiting: {
+        backgroundColor: '#FF0000'
     },
     trafficLightClickNow: {
-        backgroundColor: '#00FF00',
-        minHeight: 400,
-        justifyContent: 'center',
-        alignItems: 'center'
+        backgroundColor: '#00FF00'
     },
     trafficLightRestart: {
-        backgroundColor: '#888800',
-        minHeight: 400,
-        justifyContent: 'center',
-        alignItems: 'center'
+        backgroundColor: '#AAAA00'
+    },
+    trafficLightInvalid: {
+        backgroundColor: '#CC2200'
     },
     trafficSign: {
         color: '#FFFFFF',
